@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import {movies} from './getMovies'
+import axios from 'axios'
 
 
 export default class List extends Component {
   constructor(){
     super();
+    console.log("constructor is called")
     this.state={
       hover:"",
     };
@@ -21,7 +23,14 @@ export default class List extends Component {
       hover:"",
     });
   };
+async componentDidMount(){
+  console.log("componentDidMount is called");
+  let res = await axios.get("https://api.themoviedb.org/3/movie/550?api_key=df993b768d2ad429b2c8a94fad44816a");
+  console.log(res.data);
+ }
+
   render() {
+    console.log("render is called")
     let movie =movies.results;
     return (
        <>
