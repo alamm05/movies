@@ -31,9 +31,7 @@ export default class List extends Component {
   changeMovies = async()=>{
     console.log(this.state.currPage);
     console.log("changeMovies called");
-    let ans = await axios.get(
-
-    );
+    let ans = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=df993b768d2ad429b2c8a94fad44816a&language=en-US&page=${this.state.currPage}`);
     // console.log(ans.data);
     this.setState({
       movies:[...ans.data.results],

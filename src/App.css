@@ -125,3 +125,11 @@
   display: flex;
   justify-content: center;
 }
+
+.favourite-table{
+  padding: 3rem;
+}
+
+.favourite-list{
+  padding: 3rem;
+}
