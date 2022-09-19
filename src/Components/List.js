@@ -27,6 +27,46 @@ export default class List extends Component {
       hover:"",
     });
   };
+
+  changeMovies = async()=>{
+    console.log(this.state.currPage);
+    console.log("changeMovies called");
+    let ans = await axios.get(
+
+    );
+    // console.log(ans.data);
+    this.setState({
+      movies:[...ans.data.results],
+    });
+  };
+
+  handleNext=()=>{
+    let tempArr=[];
+    for(let i =1;i<=this.state.parr.length +1;i++){
+      tempArr.push(i);//[1,2]
+    }
+    this.setState({
+      parr:[...tempArr],
+      currPage:this.state.currPage + 1,
+    },this.changeMovies);
+  };
+
+  handlePrev=()=>{
+    if(this.state.currPage !=1){
+      this.setState({
+        currPage:this.state.currPage - 1
+      },this.changeMovies);
+    }
+  }
+
+  handlePageNum = (pageNum)=>{
+    this.setState(
+      {
+        currPage:pageNum,
+      },
+      this.changeMovies
+    );
+  }
 async componentDidMount(){
   console.log("componentDidMount is called");
   let res = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=df993b768d2ad429b2c8a94fad44816a&language=en-US&page=${this.state.currPage}`);
@@ -73,11 +113,15 @@ async componentDidMount(){
                </div>
               <div className='pagination'>
               <nav aria-label="Page navigation example">
-              <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-              
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+              <ul className="pagination">
+                <li className="page-item"><a className="page-link" onClick={this.handlePrev}>Previous</a></li>
+                {this.state.parr.map((pageNum)=>(
+                  <li className="page-item"><a className="page-link" href="#">
+                    {pageNum}
+                    </a>
+                    </li>
+                ))}
+                <li className="page-item"><a className="page-link" onClick={this.handleNext}>Next</a></li>
               </ul>
               </nav>
               </div>
