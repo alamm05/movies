@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {movies} from './getMovies'
 import axios from 'axios'
-import {API_KEY} from "../secrets"
 
 
 export default class List extends Component {
@@ -30,8 +29,8 @@ export default class List extends Component {
   };
 
   changeMovies = async()=>{
-    console.log(this.state.currPage);
-    console.log("changeMovies called");
+    // console.log(this.state.currPage);
+    // console.log("changeMovies called");
     let ans = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=df993b768d2ad429b2c8a94fad44816a&language=en-US&page=${this.state.currPage}`);
     // console.log(ans.data);
     this.setState({
@@ -41,7 +40,7 @@ export default class List extends Component {
 
   handleNext=()=>{
     let tempArr=[];
-    for(let i =1;i<=this.state.parr.length +1;i++){
+    for(let i =1;i<=this.state.parr.length + 1;i++){
       tempArr.push(i);//[1,2]
     }
     this.setState({
@@ -68,7 +67,7 @@ export default class List extends Component {
   }
   handleFavourites=(movieObj)=>{
     let localStorageMovies =JSON.parse(localStorage.getItem("movies"))  || [];
-    if(this.state.favMov.includes(movieObj)){
+    if(this.state.favMov.includes(movieObj.id)){
       localStorageMovies = localStorageMovies.filter(
         (movie)=>movie.id != movieObj.id
       );
@@ -83,13 +82,13 @@ export default class List extends Component {
   }
 
 async componentDidMount(){
-  console.log("componentDidMount is called");
-  let res = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=df993b768d2ad429b2c8a94fad44816a&language=en-US&page=${this.state.currPage}`);
+  // console.log("componentDidMount is called");
+  let ans = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=df993b768d2ad429b2c8a94fad44816a&language=en-US&page=${this.state.currPage}`);
   // console.log(res.data);
   this.setState({
-    movies:[...res.data.results],
+    movies:[...ans.data.results],
   });
- };
+ }
 
   render() {
     // console.log("render is called")
@@ -97,10 +96,11 @@ async componentDidMount(){
     return (
        <>
           {
-             this.state.movies.length ==0 ?
+             this.state.movies.length == 0 ?
              <div className="spinner-border text-info" role="status">
                 <span className="sr-only">Loading...</span>
-           </div>:
+           </div>
+             :
            (
             <div>
               <h3 className='text-center'>
@@ -130,14 +130,25 @@ async componentDidMount(){
               <div className='pagination'>
               <nav aria-label="Page navigation example">
               <ul className="pagination">
-                <li className="page-item"><a className="page-link" onClick={this.handlePrev}>Previous</a></li>
+                <li className="page-item"><a className="page-link" onClick={this.handlePrev}
+                >
+                  Previous
+                  </a>
+                </li>
                 {this.state.parr.map((pageNum)=>(
-                  <li className="page-item"><a className="page-link" href="#">
+                  <li className="page-item"><a className="page-link" onClick={()=>{
+                    this.handlePageNum(pageNum)
+                  }}
+                  >
                     {pageNum}
                     </a>
-                    </li>
+                  </li>
                 ))}
-                <li className="page-item"><a className="page-link" onClick={this.handleNext}>Next</a></li>
+                <li className="page-item"><a className="page-link" onClick={this.handleNext}
+                >
+                  Next
+                  </a>
+                  </li>
               </ul>
               </nav>
               </div>
